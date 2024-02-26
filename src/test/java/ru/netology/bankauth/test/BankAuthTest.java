@@ -36,6 +36,19 @@ public class BankAuthTest {
         loginPage = open("http://localhost:9999", LoginPage.class);
     }
 
+    ChromeOptions options = new ChromeOptions();
+
+    {
+        options.addArguments("--start-maximized");
+    }
+
+    Map<String, Object> prefs = new HashMap<String, Object>(); {
+        prefs.put("credentials_enable_service", false);
+        prefs.put("password_manager_enabled", false);
+        options.setExperimentalOption("prefs", prefs);
+        Configuration.browserCapabilities = options;
+    }
+
     @Test
     void successLogin() {
         var authInfo = DataHelper.getAuthInfoWithTest();
