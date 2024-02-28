@@ -1,10 +1,7 @@
 package ru.netology.bankauth.test;
 
 import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import ru.netology.bankauth.data.DataHelper;
 import ru.netology.bankauth.data.SQLHelper;
@@ -33,19 +30,20 @@ public class BankAuthTest {
 
     @BeforeEach
     void setUp() {
-        loginPage = open("http://localhost:9999", LoginPage.class);
-    }
-
-    ChromeOptions options = new ChromeOptions();
+        ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
-    Map<String, Object> prefs = new HashMap<String, Object>();
+        Map<String, Object> prefs = new HashMap<String, Object>();
         prefs.put("credentials_enable_service", false);
         prefs.put("password_manager_enabled", false);
         options.setExperimentalOption("prefs", prefs);
         Configuration.browserCapabilities = options;
 
+        loginPage = open("http://localhost:9999", LoginPage.class);
+    }
+
 
     @Test
+    @DisplayName("Should successfully login to dashboard with exist login and password from SUT test data")
     void successLogin() {
         var authInfo = DataHelper.getAuthInfoWithTest();
         var verificationPage = loginPage.validLogin(authInfo);
@@ -55,6 +53,7 @@ public class BankAuthTest {
     }
 
     @Test
+    @DisplayName("Should get error notification if user is not exist in base")
     void RandomUser() {
         var authInfo = DataHelper.generateRandomUser();
         loginPage.validLogin(authInfo);
@@ -62,6 +61,7 @@ public class BankAuthTest {
     }
 
     @Test
+    @DisplayName("Should get error notification if login with exist in base and active user and random verification code")
     void errorNotificationIfLoginWithExistUserAndRandomVerificationCode() {
         var authInfo = DataHelper.getAuthInfoWithTest();
         var verificationPage = loginPage.validLogin(authInfo);
