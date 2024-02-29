@@ -44,7 +44,7 @@ public class BankAuthTest {
 
     @Test
     @DisplayName("Should successfully login to dashboard with exist login and password from SUT test data")
-    void successLogin() {
+    void shouldSuccessfullyLogin() {
         var authInfo = DataHelper.getAuthInfoWithTest();
         var verificationPage = loginPage.validLogin(authInfo);
         verificationPage.verificationPage();

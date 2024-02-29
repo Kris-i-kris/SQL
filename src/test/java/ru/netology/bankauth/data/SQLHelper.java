@@ -7,24 +7,25 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalTime;
 
 public class SQLHelper {
     private static final QueryRunner QUERY_RUNNER = new QueryRunner();
     private SQLHelper() {
     }
-    private static Connection getConnect() throws SQLException {
+    private static Connection getConn() throws SQLException {
         return DriverManager.getConnection(System.getProperty("db.url"),"app","pass");
     }
     @SneakyThrows
     public static DataHelper.VerificationCode getVerificationCode() {
         var codeSQL = "SELECT code FROM auth_codes ORDER BY created DESC LIMIT 1";
-        var connect = getConnect();
-        var code = QUERY_RUNNER.query(codeSQL, connect, new ScalarHandler<String>());
+        var conn = getConn();
+        var code = QUERY_RUNNER.query(conn, codeSQL, new ScalarHandler<String>());
         return new DataHelper.VerificationCode(code);
     }
     @SneakyThrows
     public static void cleanDataBase() {
-        var connection = getConnect();
+        var connection = getConn();
         QUERY_RUNNER.execute(connection,"DELETE FROM auth_codes");
         QUERY_RUNNER.execute(connection,"DELETE FROM card_transactions");
         QUERY_RUNNER.execute(connection,"DELETE FROM cards");
@@ -32,7 +33,7 @@ public class SQLHelper {
     }
     @SneakyThrows
     public static void cleanAuthCode() {
-        var connection = getConnect();
+        var connection = getConn();
         QUERY_RUNNER.execute(connection,"DELETE FROM auth_codes");
     }
 }
